@@ -3,7 +3,6 @@ import {connect} from 'react-redux';
 import { View, Text, TouchableOpacity, StyleSheet, Platform, FlatList } from 'react-native';
 import {getDecks} from '../utils/api';
 import {receiveDecks} from "../actions";
-import Deck from './Deck';
 import { white, gray } from '../utils/colors';
 
 
@@ -18,7 +17,9 @@ export class DeckList extends Component {
     }
 
     renderItem = ({item})=>(
-            <TouchableOpacity style={styles.item}>
+            <TouchableOpacity style={styles.item}
+                              onPress={()=>this.props.navigation.navigate('Deck', {id: item.title})}
+            >
                 <Text style={styles.title}>{item.title}</Text>
                 <Text style={styles.subTitle}>{`${item.questions.length} cards`}</Text>
             </TouchableOpacity>
@@ -30,7 +31,7 @@ export class DeckList extends Component {
         return(
             <View style={styles.container}>
                 <Text style={styles.heading}>Decks</Text>
-                <View style={styles.list}>
+                <View style={{flex:1}}>
                     <FlatList
                         data={decks}
                         renderItem={this.renderItem}
@@ -42,9 +43,9 @@ export class DeckList extends Component {
     }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(entries) {
     return {
-        decks: state ? Object.values(state) : null
+        decks: entries ? Object.values(entries) : null
     }
 }
 
@@ -54,13 +55,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: 20,
-        margin: 20,
-    },
-    list: {
-        justifyContent:'flex-start',
-        flex: 1,
-        marginTop: 40,
     },
     item: {
         backgroundColor: white,
@@ -68,7 +62,7 @@ const styles = StyleSheet.create({
         padding: 20,
         marginLeft: 10,
         marginRight: 10,
-        marginTop: 17,
+        marginTop: 10,
         justifyContent: 'center',
         alignItems: 'center',
         shadowRadius: 3,
@@ -82,6 +76,8 @@ const styles = StyleSheet.create({
     heading:{
         fontSize: 25,
         fontWeight: 'bold',
+        padding: 20,
+        margin: 20,
     },
     title:{
         fontSize: 20,
