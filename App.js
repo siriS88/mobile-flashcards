@@ -8,6 +8,9 @@ import { View } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import DeckList from './components/DeckList';
 import Deck from './components/Deck';
+import NewCard from './components/NewCard';
+import Quiz from './components/Quiz';
+
 import { white, black } from './utils/colors';
 
 
@@ -27,6 +30,15 @@ const Stack = createStackNavigator({
             }
         }
     },
+    NewCard: {
+      screen: NewCard,
+      navigationOptions: {
+          headerTintColor: white,
+          headerStyle: {
+              backgroundColor: black,
+          }
+      }
+    }
 });
 
 export default class App extends React.Component {
