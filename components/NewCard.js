@@ -21,7 +21,7 @@ export class NewCard extends Component {
     }
 
     submit = () => {
-      const {navigation, dispatch} = this.props
+      const {navigation, dispatch} = this.props;
       const {deckId} = navigation.state.params;
 
       const card = {

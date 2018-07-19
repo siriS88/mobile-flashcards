@@ -9,6 +9,8 @@ questions for the deck with the associated title
  */
 
 const DECKS_STORAGE_KEY = 'Decks@FlashCards';
+const DECKS_QUIZ_DATES = 'Decks@QuizDates';
+
 
 function getDummyData() {
     return {
@@ -94,7 +96,6 @@ function getDummyData() {
 export function getDecks() {
     return AsyncStorage.getItem(DECKS_STORAGE_KEY).then((decks)=>{
         // if there is no data initially, add some dummy data to start off
-        console.log(decks);
         if (decks === null) {
             const dummyData = getDummyData();
             AsyncStorage.setItem(DECKS_STORAGE_KEY, JSON.stringify(dummyData));
@@ -117,7 +118,10 @@ export function getDeck(id) {
 
 export function saveDeckTitle(title) {
     return AsyncStorage.mergeItem(DECKS_STORAGE_KEY, JSON.stringify({
-        [title]: {}
+        [title]: {
+            title: title,
+            questions: []
+        }
     }))
 }
 
@@ -139,3 +143,16 @@ export function addCardToDeck(title, card) {
             console.error('Unable to add card to deck due to:', err)
         })
 }
+
+// export function addQuizInfoToDate(date, quizInfo) {
+//     return AsyncStorage.mergeItem(DECKS_QUIZ_DATES, JSON.stringify({
+//         date: quizInfo
+//     }))
+// }
+//
+// export function getQuizDateInfo() {
+//     return AsyncStorage.getItem(DECKS_QUIZ_DATES)
+//         .then((info)=>JSON.parse(info)).catch((err)=>{
+//         console.error('Unable to add card to deck due to:', err)
+//     })
+// }

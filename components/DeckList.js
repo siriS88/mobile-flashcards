@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import { View, Text, TouchableOpacity, StyleSheet, Platform, FlatList } from 'react-native';
 import {getDecks} from '../utils/api';
 import {receiveDecks} from "../actions";
-import { white, gray } from '../utils/colors';
+import { white, gray, black, orange } from '../utils/colors';
 
 
 export class DeckList extends Component {
@@ -12,32 +12,42 @@ export class DeckList extends Component {
         // get all the decks from the persistent async storage
         // and initialize redux store with these decks
         getDecks().then((decks)=>{
-            dispatch(receiveDecks(decks));
+            let decksAugmented = Object.keys(decks).map((key)=>{
+                return {
+                    [key]: {
+                        ...decks[key],
+                        quizStatus: 'Not Started',
+                        quizScore: 0,
+                        quizIndex: 0,
+                    }
+                }
+            });
+            decksAugmented = Object.assign({},...decksAugmented);
+            dispatch(receiveDecks(decksAugmented));
         });
     }
 
     renderItem = ({item})=>(
-            <TouchableOpacity style={styles.item}
-                              onPress={()=>this.props.navigation.navigate('Deck', {id: item.title})}
-            >
-                <Text style={styles.title}>{item.title}</Text>
-                <Text style={styles.subTitle}>{`${item.questions.length} cards`}</Text>
-            </TouchableOpacity>
+        <TouchableOpacity style={styles.item}
+                          onPress={()=>this.props.navigation.navigate('Deck', {id: item.title})}
+        >
+            <Text style={styles.titleText}>{item.title}</Text>
+            <Text style={styles.subTitleText}>{`${item.questions?item.questions.length:0} cards`}</Text>
+        </TouchableOpacity>
     );
 
     render() {
         const {decks} = this.props;
-        console.log("decks to render", decks);
         return(
             <View style={styles.container}>
-                <Text style={styles.heading}>Decks</Text>
-                <View style={{flex:1}}>
-                    <FlatList
-                        data={decks}
-                        renderItem={this.renderItem}
-                        keyExtractor={item => item.title}
-                    />
+                <View style={styles.header}>
+                    <Text style={styles.headingText}>Decks</Text>
                 </View>
+                <FlatList
+                    data={decks}
+                    renderItem={this.renderItem}
+                    keyExtractor={item => item.title}
+                />
             </View>
         )
     }
@@ -53,12 +63,19 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
+        justifyContent: 'flex-start',
         alignItems: 'center',
-        justifyContent: 'center',
+    },
+    header: {
+        borderBottomColor: orange,
+        borderBottomWidth: 4,
+        alignSelf: 'stretch',
     },
     item: {
         backgroundColor: white,
         borderRadius: Platform.OS === 'ios' ? 16 : 10,
+        borderBottomColor: Platform.OS === 'ios' ? white : black,
+        borderBottomWidth: 1,
         padding: 20,
         marginLeft: 10,
         marginRight: 10,
@@ -73,17 +90,18 @@ const styles = StyleSheet.create({
             height: 3
         },
     },
-    heading:{
+    headingText:{
         fontSize: 25,
         fontWeight: 'bold',
-        padding: 20,
-        margin: 20,
+        margin: 40,
+        alignSelf: 'center',
+        color: orange,
     },
-    title:{
+    titleText:{
         fontSize: 20,
         fontWeight: 'bold',
     },
-    subTitle:{
+    subTitleText:{
         fontSize: 15,
         color: gray,
     }

@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { gray, white, black } from "../utils/colors";
+import {addQuizStatus, addQuizScore, addQuizIndex} from "../actions";
 
 export class Deck extends Component {
     static navigationOptions = ({navigation}) => {
@@ -11,13 +12,25 @@ export class Deck extends Component {
         }
     };
 
+    startQuiz = () => {
+        const {deckObj, dispatch} = this.props;
+        // set the quiz started field for this deck
+        dispatch(addQuizStatus(deckObj.title, 'Started'));
+        // reset any previously unfinished quiz info left behind
+        dispatch(addQuizScore(deckObj.title, 0));
+        dispatch(addQuizIndex(deckObj.title, 0));
+
+        // navigate to CardNav
+        this.props.navigation.navigate('CardNav', {deckId: deckObj.title})
+    };
+
     render() {
         const {deckObj} = this.props;
         return(
             <View style={styles.container}>
                 <View style={styles.header}>
                     <Text style={styles.heading}>{deckObj.title}</Text>
-                    <Text style={styles.subHeading}>{`${deckObj.questions.length} cards`}</Text>
+                    <Text style={styles.subHeading}>{`${deckObj.questions?deckObj.questions.length:0} cards`}</Text>
                 </View>
                 <View style={styles.buttons}>
                     <TouchableOpacity style={styles.addButton}
@@ -28,9 +41,7 @@ export class Deck extends Component {
                         <Text style={styles.addButtonText}>Add Card</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.quizButton}
-                                      onPress={()=>
-                                          this.props.navigation.navigate('Quiz', {deckId: deckObj.title}
-                                          )}
+                                      onPress={this.startQuiz}
                     >
                         <Text style={styles.quizButtonText}>Start Quiz</Text>
                     </TouchableOpacity>
@@ -61,10 +72,12 @@ const styles = StyleSheet.create({
     heading:{
         fontSize: 50,
         fontWeight: 'bold',
+        alignSelf: 'center',
     },
     subHeading:{
         fontSize: 40,
         color: gray,
+        alignSelf: 'center',
     },
     buttons: {
         marginBottom:100,
