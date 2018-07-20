@@ -6,7 +6,7 @@ import reducer from './reducers';
 import logger from './middleware';
 import { View, Platform } from 'react-native';
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
-import { createBottomTabNavigator, createStackNavigator } from 'react-navigation';
+import { createBottomTabNavigator, createStackNavigator, createSwitchNavigator } from 'react-navigation';
 import DeckList from './components/DeckList';
 import Deck from './components/Deck';
 import NewCard from './components/NewCard';
@@ -90,19 +90,15 @@ const Stack = createStackNavigator({
               backgroundColor: black,
           }
       }
-    },
-    CardNav: {
-        screen: CardNav,
-        navigationOptions: {
-            title: 'Quiz',
-            headerTintColor: white,
-            headerStyle: {
-                backgroundColor: black,
-            }
-        }
     }
-});
+},
+    { initialRouteName: 'Home',}
+);
 
+const AppNavigator = createSwitchNavigator({
+    Main: Stack, // This screen renders a navigator!
+    CardNav: CardNav,
+});
 
 export default class App extends React.Component {
     store = createStore(reducer, applyMiddleware(logger));
@@ -111,7 +107,7 @@ export default class App extends React.Component {
     return (
         <Provider store={this.store}>
             <View style={{flex:1}}>
-                <Stack/>
+                <AppNavigator/>
             </View>
         </Provider>
     );

@@ -3,20 +3,21 @@ import {connect} from 'react-redux';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { green, red, white, black } from "../utils/colors";
 import {addQuizStatus, addQuizScore, addQuizIndex} from "../actions";
-
+import {NavigationActions} from 'react-navigation';
 
 export class Answer extends Component {
     markQuestionCorrect = () => {
         const {deckObj, dispatch} = this.props;
         dispatch(addQuizScore(deckObj.title, deckObj.quizScore+1));
         dispatch(addQuizIndex(deckObj.title, deckObj.quizIndex+1));
-        this.props.navigation.navigate('CardNav', {deckId: deckObj.title})
+        this.props.navigation.navigate('CardNav', {deckId: deckObj.title});
     };
 
     markQuestionIncorrect = () => {
         const {deckObj, dispatch} = this.props;
         dispatch(addQuizIndex(deckObj.title, deckObj.quizIndex+1));
-        this.props.navigation.navigate('CardNav', {deckId: deckObj.title})
+        // this.props.navigation.navigate('CardNav', {deckId: deckObj.title})
+        this.props.navigation.goBack();
     };
 
     render(){
