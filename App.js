@@ -6,7 +6,7 @@ import reducer from './reducers';
 import logger from './middleware';
 import { View, Platform } from 'react-native';
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
-import { createBottomTabNavigator, createStackNavigator, createSwitchNavigator } from 'react-navigation';
+import { createBottomTabNavigator, createStackNavigator } from 'react-navigation';
 import DeckList from './components/DeckList';
 import Deck from './components/Deck';
 import NewCard from './components/NewCard';
@@ -14,6 +14,7 @@ import NewDeck from './components/NewDeck';
 import { white, black } from "./utils/colors";
 import Answer from "./components/Answer";
 import Question from "./components/Question";
+import Score from "./components/Score";
 
 
 const Tabs = createBottomTabNavigator({
@@ -53,18 +54,22 @@ const Tabs = createBottomTabNavigator({
 });
 
 const CardNav = createStackNavigator({
-    Question: {
-        screen: Question,
-    },
-    Answer: {
-        screen: Answer,
-    }
+        Question: {
+            screen: Question,
+        },
+        Answer: {
+            screen: Answer,
+        },
+        Score: {
+            screen: Score,
+
+        }
     }, {
-    navigationOptions: {
-        header: null
-    },
-    initialRouteName: 'Question',
-});
+        navigationOptions: {
+            header: null
+        },
+        initialRouteName: 'Question',
+    });
 
 const Stack = createStackNavigator({
     Home: {
@@ -90,14 +95,17 @@ const Stack = createStackNavigator({
               backgroundColor: black,
           }
       }
+    },
+    CardNav: {
+        screen: CardNav,
+        navigationOptions: {
+            title: 'Quiz',
+            headerTintColor: white,
+            headerStyle: {
+                backgroundColor: black,
+            }
+        }
     }
-},
-    { initialRouteName: 'Home',}
-);
-
-const AppNavigator = createSwitchNavigator({
-    Main: Stack, // This screen renders a navigator!
-    CardNav: CardNav,
 });
 
 export default class App extends React.Component {
@@ -107,7 +115,7 @@ export default class App extends React.Component {
     return (
         <Provider store={this.store}>
             <View style={{flex:1}}>
-                <AppNavigator/>
+                <Stack/>
             </View>
         </Provider>
     );

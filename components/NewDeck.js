@@ -29,7 +29,7 @@ export class NewDeck extends Component {
             // go back to deck view screen
             navigation.goBack();
         })
-    }
+    };
 
     render() {
         return(

@@ -3,25 +3,48 @@ import {connect} from 'react-redux';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { green, red, white, black } from "../utils/colors";
 import {addQuizStatus, addQuizScore, addQuizIndex} from "../actions";
-import {NavigationActions} from 'react-navigation';
+import { StackActions, NavigationActions } from 'react-navigation';
 
 export class Answer extends Component {
     markQuestionCorrect = () => {
-        const {deckObj, dispatch} = this.props;
+        const {deckObj} = this.props.navigation.state.params;
+        const {dispatch} = this.props;
         dispatch(addQuizScore(deckObj.title, deckObj.quizScore+1));
-        dispatch(addQuizIndex(deckObj.title, deckObj.quizIndex+1));
-        this.props.navigation.navigate('CardNav', {deckId: deckObj.title});
+        if (deckObj.quizIndex < deckObj.questions.length-1) {
+            dispatch(addQuizIndex(deckObj.title, deckObj.quizIndex+1));
+            // this.props.navigation.goBack(); // THIS WORKS
+
+            //RESET ACTION does not work
+            const resetAction = StackActions.reset({
+                index: 0,
+                actions: [NavigationActions.navigate({
+                    routeName: 'Question',
+                    params: {deckId: deckObj.title},
+                })],
+                key:'CardNav'
+            });
+            this.props.navigation.dispatch(resetAction);
+
+        } else {
+            this.props.navigation.navigate('Score', {deckObj: deckObj}); // Done with questions, move to Score page
+        }
+
     };
 
     markQuestionIncorrect = () => {
-        const {deckObj, dispatch} = this.props;
-        dispatch(addQuizIndex(deckObj.title, deckObj.quizIndex+1));
-        // this.props.navigation.navigate('CardNav', {deckId: deckObj.title})
-        this.props.navigation.goBack();
+        const {deckObj} = this.props.navigation.state.params;
+        const {dispatch} = this.props;
+        if (deckObj.quizIndex < deckObj.questions.length-1) {
+            dispatch(addQuizIndex(deckObj.title, deckObj.quizIndex+1));
+            this.props.navigation.goBack();
+
+        } else {
+            this.props.navigation.navigate('Score', {deckObj: deckObj});
+        }
     };
 
     render(){
-        const {deckObj} = this.props;
+        const {deckObj} = this.props.navigation.state.params;
         const questionObj = deckObj.questions[deckObj.quizIndex];
 
         return (
@@ -82,7 +105,7 @@ const styles = StyleSheet.create({
     },
     buttons: {
         marginBottom:100,
-        alignItems: 'stretch',
+        alignSelf: 'stretch',
         marginLeft: 20,
         marginRight: 20,
     },
@@ -107,13 +130,13 @@ const styles = StyleSheet.create({
     },
 });
 
-function mapStateToProps(state, {navigation}) {
-    const {deckId} = navigation.state.params;
-    const deck = state[deckId];
-    return {
-        deckObj: deck ? deck : null
-    }
-}
+// function mapStateToProps(state, {navigation}) {
+//     const {deckId} = navigation.state.params;
+//     const deck = state[deckId];
+//     return {
+//         deckObj: deck ? deck : null
+//     }
+// }
 
 
-export default connect(mapStateToProps)(Answer);
+export default connect()(Answer);

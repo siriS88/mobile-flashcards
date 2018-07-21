@@ -13,7 +13,7 @@ export class Question extends Component {
                     <Text style={styles.questionText}>{questionObj.question}</Text>
                     <TouchableOpacity style={styles.answerButton}
                         onPress={()=>this.props.navigation.navigate('Answer',
-                            {deckId: deckObj.title})}>
+                            {deckObj: deckObj})}>
                         <Text style={styles.answerButtonText}>Go to answer</Text>
                     </TouchableOpacity>
                 </View>
