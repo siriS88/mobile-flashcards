@@ -9,8 +9,6 @@ questions for the deck with the associated title
  */
 
 const DECKS_STORAGE_KEY = 'Decks@FlashCards';
-const DECKS_QUIZ_DATES = 'Decks@QuizDates';
-
 
 function getDummyData() {
     return {
@@ -28,7 +26,7 @@ function getDummyData() {
             ]
         },
         JavaScript: {
-            title: 'JavaScriptjhgcghcghkcghcghcghkghghgkkg',
+            title: 'JavaScript',
             questions: [
                 {
                     question: 'What is a closure?',
@@ -36,60 +34,6 @@ function getDummyData() {
                 }
             ]
         },
-        JavaScript2: {
-            title: 'JavaScriptjhgcghcghkcghcghcghkghghgkkg2',
-            questions: [
-                {
-                    question: 'What is a closure?',
-                    answer: 'The combination of a function and the lexical environment within which that function was declared.'
-                }
-            ]
-        },
-        JavaScript3: {
-            title: 'JavaScriptjhgcghcghkcghcghcghkghghgkkg3',
-            questions: [
-                {
-                    question: 'What is a closure?',
-                    answer: 'The combination of a function and the lexical environment within which that function was declared.'
-                }
-            ]
-        },
-        JavaScript4: {
-            title: 'JavaScriptjhgcghcghkcghcghcghkghghgkkg4',
-            questions: [
-                {
-                    question: 'What is a closure?',
-                    answer: 'The combination of a function and the lexical environment within which that function was declared.'
-                }
-            ]
-        },
-        JavaScript5: {
-            title: 'JavaScriptjhgcghcghkcghcghcghkghghgkkg5',
-            questions: [
-                {
-                    question: 'What is a closure?',
-                    answer: 'The combination of a function and the lexical environment within which that function was declared.'
-                }
-            ]
-        },
-        JavaScript6: {
-            title: 'JavaScriptjhgcghcghkcghcghcghkghghgkkg6',
-            questions: [
-                {
-                    question: 'What is a closure?',
-                    answer: 'The combination of a function and the lexical environment within which that function was declared.'
-                }
-            ]
-        },
-        JavaScript7: {
-            title: 'JavaScriptjhgcghcghkcghcghcghkghghgkkg7',
-            questions: [
-                {
-                    question: 'What is a closure?',
-                    answer: 'The combination of a function and the lexical environment within which that function was declared.'
-                }
-            ]
-        }
     };
 }
 

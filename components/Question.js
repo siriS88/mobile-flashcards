@@ -9,12 +9,15 @@ export class Question extends Component {
         const questionObj = deckObj.questions[deckObj.quizIndex];
         return (
             <View style={styles.container}>
+                <View style={styles.progress}>
+                    <Text style={styles.progressText}>{`${deckObj.quizIndex+1}/${deckObj.questions.length}`}</Text>
+                </View>
                 <View style={styles.question}>
                     <Text style={styles.questionText}>{questionObj.question}</Text>
                     <TouchableOpacity style={styles.answerButton}
                         onPress={()=>this.props.navigation.navigate('Answer',
                             {deckObj: deckObj})}>
-                        <Text style={styles.answerButtonText}>Go to answer</Text>
+                        <Text style={styles.answerButtonText}>Show answer</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -34,8 +37,21 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start',
         alignItems: 'center'
+    },
+    progress: {
+        margin: 20,
+        alignSelf: 'flex-start',
+    },
+    progressText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        alignSelf: 'center',
+    },
+    question: {
+        margin: 40,
+        alignItems: 'center',
     },
     questionText: {
         color: black,
@@ -50,10 +66,6 @@ const styles = StyleSheet.create({
     answerButtonText: {
         color: red,
         fontSize: 12,
-    },
-    question: {
-        marginTop: 100,
-        marginBottom:40,
         alignItems: 'center',
     },
 });

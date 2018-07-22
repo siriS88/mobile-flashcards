@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { applyMiddleware } from 'redux';
 import reducer from './reducers';
 import logger from './middleware';
-import { View, Platform } from 'react-native';
+import { View } from 'react-native';
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator, createStackNavigator } from 'react-navigation';
 import DeckList from './components/DeckList';
@@ -15,7 +15,7 @@ import { white, black } from "./utils/colors";
 import Answer from "./components/Answer";
 import Question from "./components/Question";
 import Score from "./components/Score";
-
+import {setLocalNotification} from "./utils/helpers";
 
 const Tabs = createBottomTabNavigator({
     DeckList: {
@@ -110,6 +110,10 @@ const Stack = createStackNavigator({
 
 export default class App extends React.Component {
     store = createStore(reducer, applyMiddleware(logger));
+
+    componentDidMount(){
+        setLocalNotification();
+    }
 
     render() {
     return (

@@ -1,25 +1,16 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import {black, gray, white} from "../utils/colors";
-import {addQuizStatus, addQuizScore, addQuizIndex} from "../actions";
+import {black, gray, white, green, red} from "../utils/colors";
 import { StackActions, NavigationActions } from 'react-navigation';
 
 export class Score extends Component {
 
     retakeQuiz = () => {
-        const { dispatch } = this.props;
-        const { deckObj } = this.props.navigation.state.params;
+        const { deckId } = this.props.navigation.state.params;
 
-        // set the quiz started field for this deck
-        // dispatch(addQuizStatus(deckObj.title, 'Started'));
-        // // reset quiz info
-        // dispatch(addQuizScore(deckObj.title, 0));
-        // dispatch(addQuizIndex(deckObj.title, 0));
-
-        // navigate to CardNav
-        this.props.navigation.navigate('CardNav', {deckId: deckObj.title},
-            NavigationActions.navigate({ routeName: 'Question' }));
+        // // navigate to CardNav
+        // this.props.navigation.navigate('CardNav', {deckId: deckId},
+        //     NavigationActions.navigate({ routeName: 'Question' }));
 
         // The above is same as this - this also works:
         // this.props.navigate does dispatch of this underneath
@@ -31,24 +22,38 @@ export class Score extends Component {
         //     action: NavigationActions.navigate({ routeName: 'Question' }),
         // });
         // this.props.navigation.dispatch(navigateAction);
+
+        //RESET STACK NAVIGATOR and add next Question screen onto stack
+        const resetAction = StackActions.reset({
+            index: 0,
+            actions: [NavigationActions.navigate({
+                routeName: 'Question',
+                params: {deckId: deckId},
+            })],
+            key:this.props.navigation.dangerouslyGetParent().state.key
+        });
+        this.props.navigation.dispatch(resetAction);
     };
 
     render() {
-        const { deckObj } = this.props.navigation.state.params;
+        const { scoreObj, deckId } = this.props.navigation.state.params;
         return (
             <View style={styles.container}>
                 <View style={styles.header}>
+                    <Text style={styles.deckTitleText}>
+                        {`Deck: ${deckId}`}
+                    </Text>
                     <Text style={styles.scoreText}>
-                        {`Your Quiz Score percentage: ${(deckObj.quizScore/deckObj.questions.length)*100}%`}
+                        {`Your Quiz Score: ${Math.round((scoreObj.correct/scoreObj.total)*100)}%`}
+                    </Text>
+                    <Text style={[styles.subScoreText, {color:green}]}>
+                        {`Total Correct Answers: ${scoreObj.correct}`}
+                    </Text>
+                    <Text style={[styles.subScoreText, {color:red}]}>
+                        {`Total Incorrect Answers: ${scoreObj.total - scoreObj.correct}`}
                     </Text>
                     <Text style={styles.subScoreText}>
-                        {`Total Correct Answers: ${deckObj.quizScore}`}
-                    </Text>
-                    <Text style={styles.subScoreText}>
-                        {`Total Incorrect Answers: ${deckObj.questions.length-deckObj.quizScore}`}
-                    </Text>
-                    <Text style={styles.subScoreText}>
-                        {`Total Questions answered: ${deckObj.questions.length}`}
+                        {`Total Questions Answered: ${scoreObj.total}`}
                     </Text>
                 </View>
                 <View style={styles.buttons}>
@@ -58,7 +63,7 @@ export class Score extends Component {
                         <Text style={styles.retakeButtonText}>Retake Quiz</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.backToDeckButton}
-                                      onPress={()=>this.props.navigation.navigate('Deck', {deckId: deckObj.title})}
+                                      onPress={()=>this.props.navigation.navigate('Deck', {deckId: deckId})}
                     >
                         <Text style={styles.backToDeckButtonText}>Back To Deck</Text>
                     </TouchableOpacity>
@@ -76,23 +81,31 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     header:{
-        marginTop: 200,
+        marginTop: 100,
         marginBottom:40,
         alignItems: 'center',
+    },
+    deckTitleText:{
+        fontSize: 40,
+        fontWeight: 'bold',
+        alignSelf: 'center',
+        marginBottom: 20
     },
     scoreText:{
         fontSize: 30,
         fontWeight: 'bold',
         alignSelf: 'center',
+        marginBottom: 20
     },
     subScoreText:{
         fontSize: 20,
         color: gray,
         alignSelf: 'center',
+        marginBottom: 20,
     },
     buttons: {
         marginBottom:100,
-        alignItems: 'stretch',
+        alignSelf: 'stretch',
         marginLeft: 20,
         marginRight: 20,
     },
@@ -124,4 +137,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default connect()(Score);
+export default Score;

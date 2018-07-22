@@ -1,4 +1,4 @@
-import {RECEIVE_DECKS, ADD_DECK, ADD_CARD, ADD_QUIZ_STATUS, ADD_QUIZ_SCORE, ADD_QUIZ_INDEX } from '../actions';
+import {RECEIVE_DECKS, ADD_DECK, ADD_CARD, ADD_QUIZ_SCORE, ADD_QUIZ_INDEX } from '../actions';
 
 export default function(state={}, action) {
     switch (action.type){
@@ -24,14 +24,6 @@ export default function(state={}, action) {
                 [action.title]: {
                     ...state[action.title],
                     questions: state[action.title].questions.concat([action.card])
-                }
-            };
-        case ADD_QUIZ_STATUS:
-            return {
-                ...state,
-                [action.title]: {
-                    ...state[action.title],
-                    quizStatus: action.status
                 }
             };
         case ADD_QUIZ_SCORE:

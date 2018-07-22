@@ -27,7 +27,7 @@ export class NewCard extends Component {
       const card = {
         question: this.state.question,
         answer: this.state.answer
-      }
+      };
       // Add new question to asyncstorage
       // and dispatch redux action to update store
       addCardToDeck(deckId, card).then(()=>{
@@ -35,7 +35,7 @@ export class NewCard extends Component {
         // go back to deck view screen
         navigation.goBack();
       })
-    }
+    };
 
     render() {
         return(

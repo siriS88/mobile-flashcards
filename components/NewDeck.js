@@ -25,9 +25,11 @@ export class NewDeck extends Component {
         // Add new question to asyncstorage
         // and dispatch redux action to update store
         saveDeckTitle(this.state.deckTitle).then(()=>{
-            dispatch(addDeck(this.state.deckTitle));
+            const newDeckTitle = this.state.deckTitle;
+            dispatch(addDeck(newDeckTitle));
+            this.setState({deckTitle:''});
             // go back to deck view screen
-            navigation.goBack();
+            navigation.navigate('Deck', {id: newDeckTitle});
         })
     };
 

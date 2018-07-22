@@ -2,45 +2,58 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { green, red, white, black } from "../utils/colors";
-import {addQuizStatus, addQuizScore, addQuizIndex} from "../actions";
+import { addQuizScore, addQuizIndex } from "../actions";
 import { StackActions, NavigationActions } from 'react-navigation';
+import { setLocalNotification, clearLocalNotification } from "../utils/helpers";
 
 export class Answer extends Component {
-    markQuestionCorrect = () => {
-        const {deckObj} = this.props.navigation.state.params;
-        const {dispatch} = this.props;
-        dispatch(addQuizScore(deckObj.title, deckObj.quizScore+1));
+    updateIndexDispatchAndNavigate = (dispatch, deckObj, newScore) => {
         if (deckObj.quizIndex < deckObj.questions.length-1) {
             dispatch(addQuizIndex(deckObj.title, deckObj.quizIndex+1));
-            // this.props.navigation.goBack(); // THIS WORKS
 
-            //RESET ACTION does not work
+            //RESET STACK NAVIGATOR and add next Question screen onto stack
             const resetAction = StackActions.reset({
                 index: 0,
                 actions: [NavigationActions.navigate({
                     routeName: 'Question',
                     params: {deckId: deckObj.title},
                 })],
-                key:'CardNav'
+                key:this.props.navigation.dangerouslyGetParent().state.key
             });
             this.props.navigation.dispatch(resetAction);
 
-        } else {
-            this.props.navigation.navigate('Score', {deckObj: deckObj}); // Done with questions, move to Score page
+        } else if (deckObj.quizIndex === deckObj.questions.length-1) {
+            // reset quiz info
+            dispatch(addQuizScore(deckObj.title, 0));
+            dispatch(addQuizIndex(deckObj.title, 0));
+
+            // clear local notification for today and set a new one for tomorrow
+            clearLocalNotification()
+                .then(setLocalNotification)
+                .catch((err)=>console.log(err));
+
+            this.props.navigation.navigate('Score', {
+                scoreObj: {
+                    correct: newScore,
+                    total: deckObj.questions.length
+                },
+                deckId: deckObj.title,
+            });
         }
 
+    };
+
+    markQuestionCorrect = () => {
+        const {deckObj} = this.props.navigation.state.params;
+        const {dispatch} = this.props;
+        dispatch(addQuizScore(deckObj.title, deckObj.quizScore+1));
+        this.updateIndexDispatchAndNavigate(dispatch, deckObj, deckObj.quizScore+1);
     };
 
     markQuestionIncorrect = () => {
         const {deckObj} = this.props.navigation.state.params;
         const {dispatch} = this.props;
-        if (deckObj.quizIndex < deckObj.questions.length-1) {
-            dispatch(addQuizIndex(deckObj.title, deckObj.quizIndex+1));
-            this.props.navigation.goBack();
-
-        } else {
-            this.props.navigation.navigate('Score', {deckObj: deckObj});
-        }
+        this.updateIndexDispatchAndNavigate(dispatch, deckObj, deckObj.quizScore);
     };
 
     render(){
@@ -49,6 +62,9 @@ export class Answer extends Component {
 
         return (
             <View style={styles.container}>
+                <View style={styles.progress}>
+                    <Text style={styles.progressText}>{`${deckObj.quizIndex+1}/${deckObj.questions.length}`}</Text>
+                </View>
                 <View style={styles.answer}>
                     <Text style={styles.answerText}>{questionObj.answer}</Text>
                     <TouchableOpacity style={styles.questionButton}
@@ -65,9 +81,9 @@ export class Answer extends Component {
                         </Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.incorrectButton}
+                                      onPress={this.markQuestionIncorrect}
                     >
-                        <Text style={styles.buttonText}
-                              onPress={this.markQuestionIncorrect}>
+                        <Text style={styles.buttonText}>
                             Incorrect
                         </Text>
                     </TouchableOpacity>
@@ -84,6 +100,18 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
     },
+    progress: {
+        margin: 20,
+        alignSelf: 'flex-start',
+    },
+    progressText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        alignSelf: 'center',
+    },
+    answer:{
+        margin: 40,
+    },
     answerText: {
         color: black,
         fontSize: 20,
@@ -97,11 +125,6 @@ const styles = StyleSheet.create({
     questionButtonText:{
         color: red,
         fontSize: 12,
-    },
-    answer:{
-        marginTop: 100,
-        marginBottom:40,
-        alignItems: 'center',
     },
     buttons: {
         marginBottom:100,
@@ -129,14 +152,5 @@ const styles = StyleSheet.create({
         height: 50,
     },
 });
-
-// function mapStateToProps(state, {navigation}) {
-//     const {deckId} = navigation.state.params;
-//     const deck = state[deckId];
-//     return {
-//         deckObj: deck ? deck : null
-//     }
-// }
-
 
 export default connect()(Answer);

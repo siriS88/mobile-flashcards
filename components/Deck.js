@@ -1,8 +1,8 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { gray, white, black } from "../utils/colors";
-import {addQuizStatus, addQuizScore, addQuizIndex} from "../actions";
+import { addQuizScore, addQuizIndex } from "../actions";
 
 export class Deck extends Component {
     static navigationOptions = ({navigation}) => {
@@ -13,9 +13,7 @@ export class Deck extends Component {
     };
 
     startQuiz = () => {
-        const {deckObj, dispatch} = this.props;
-        // set the quiz started field for this deck
-        dispatch(addQuizStatus(deckObj.title, 'Started'));
+        const { deckObj, dispatch } = this.props;
         // reset any previously unfinished quiz info left behind
         dispatch(addQuizScore(deckObj.title, 0));
         dispatch(addQuizIndex(deckObj.title, 0));

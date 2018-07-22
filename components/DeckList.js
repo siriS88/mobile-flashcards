@@ -64,12 +64,11 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         justifyContent: 'flex-start',
-        alignItems: 'center',
+        alignItems: 'stretch',
     },
     header: {
         borderBottomColor: orange,
         borderBottomWidth: 4,
-        alignSelf: 'stretch',
     },
     item: {
         backgroundColor: white,
