@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { applyMiddleware } from 'redux';
 import reducer from './reducers';
 import logger from './middleware';
-import { View } from 'react-native';
+import { View, Easing, Animated } from 'react-native';
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator, createStackNavigator } from 'react-navigation';
 import DeckList from './components/DeckList';
@@ -16,6 +16,45 @@ import Answer from "./components/Answer";
 import Question from "./components/Question";
 import Score from "./components/Score";
 import {setLocalNotification} from "./utils/helpers";
+
+const transitionConfig = () => {
+    return {
+        transitionSpec: {
+            duration: 750,
+            easing: Easing.out(Easing.poly(4)),
+            timing: Animated.timing,
+            useNativeDriver: true,
+        },
+        screenInterpolator: sceneProps => {
+            const { position, layout, scene, index, scenes } = sceneProps;
+            console.log("currenScene", scene);
+            console.log("toIndex", index);
+            console.log("scenes", scenes);
+
+            const thisSceneIndex = scene.index;
+            const height = layout.initHeight;
+            const width = layout.initWidth;
+
+            const translateX = position.interpolate({
+                inputRange: [thisSceneIndex - 1, thisSceneIndex, thisSceneIndex + 1],
+                outputRange: [width, 0, 0]
+            });
+
+            const translateY = position.interpolate({
+                inputRange: [0, thisSceneIndex],
+                outputRange: [height, 0]
+            });
+
+            const slideFromRight = { transform: [{ translateX }] };
+            const slideFromBottom = { transform: [{ translateY }] };
+
+            // Do not transform the screen being navigated to
+            if (index < scene.index && index ===0) return slideFromBottom;
+
+            return slideFromRight
+        },
+    }
+};
 
 const Tabs = createBottomTabNavigator({
     DeckList: {
@@ -69,6 +108,7 @@ const CardNav = createStackNavigator({
             header: null
         },
         initialRouteName: 'Question',
+        transitionConfig,
     });
 
 const Stack = createStackNavigator({

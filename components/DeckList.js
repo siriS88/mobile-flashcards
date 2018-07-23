@@ -69,12 +69,11 @@ const styles = StyleSheet.create({
     header: {
         borderBottomColor: orange,
         borderBottomWidth: 4,
+        backgroundColor: orange,
     },
     item: {
-        backgroundColor: white,
+        backgroundColor: gray,
         borderRadius: Platform.OS === 'ios' ? 16 : 10,
-        borderBottomColor: Platform.OS === 'ios' ? white : black,
-        borderBottomWidth: 1,
         padding: 20,
         marginLeft: 10,
         marginRight: 10,
@@ -90,19 +89,20 @@ const styles = StyleSheet.create({
         },
     },
     headingText:{
-        fontSize: 25,
+        fontSize: 40,
         fontWeight: 'bold',
         margin: 40,
         alignSelf: 'center',
-        color: orange,
+        color: black,
     },
     titleText:{
-        fontSize: 20,
+        fontSize: 30,
         fontWeight: 'bold',
+        color: orange,
     },
     subTitleText:{
         fontSize: 15,
-        color: gray,
+        color: black,
     }
 });
 

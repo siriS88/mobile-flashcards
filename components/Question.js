@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { black, red } from "../utils/colors";
+import { black, purple } from "../utils/colors";
 
 export class Question extends Component {
     render(){
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     },
     questionText: {
         color: black,
-        fontSize: 20,
+        fontSize: 40,
         alignSelf: 'center',
         fontWeight: 'bold',
     },
@@ -64,8 +64,8 @@ const styles = StyleSheet.create({
         margin: 20,
     },
     answerButtonText: {
-        color: red,
-        fontSize: 12,
+        color: purple,
+        fontSize: 20,
         alignItems: 'center',
     },
 });

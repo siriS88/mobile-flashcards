@@ -1,26 +1,35 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { green, red, white, black } from "../utils/colors";
+import { green, red, white, black, purple } from "../utils/colors";
 import { addQuizScore, addQuizIndex } from "../actions";
 import { StackActions, NavigationActions } from 'react-navigation';
 import { setLocalNotification, clearLocalNotification } from "../utils/helpers";
 
 export class Answer extends Component {
+    constructor(props){
+        super(props);
+        this.state={
+            background: white,
+        }
+
+    }
     updateIndexDispatchAndNavigate = (dispatch, deckObj, newScore) => {
         if (deckObj.quizIndex < deckObj.questions.length-1) {
             dispatch(addQuizIndex(deckObj.title, deckObj.quizIndex+1));
+            this.props.navigation.navigate('CardNav', {deckId: deckObj.title},
+                NavigationActions.navigate({ routeName: 'Question' }));
 
-            //RESET STACK NAVIGATOR and add next Question screen onto stack
-            const resetAction = StackActions.reset({
-                index: 0,
-                actions: [NavigationActions.navigate({
-                    routeName: 'Question',
-                    params: {deckId: deckObj.title},
-                })],
-                key:this.props.navigation.dangerouslyGetParent().state.key
-            });
-            this.props.navigation.dispatch(resetAction);
+            // //RESET STACK NAVIGATOR and add next Question screen onto stack
+            // const resetAction = StackActions.reset({
+            //     index: 0,
+            //     actions: [NavigationActions.navigate({
+            //         routeName: 'Question',
+            //         params: {deckId: deckObj.title},
+            //     })],
+            //     key:this.props.navigation.dangerouslyGetParent().state.key
+            // });
+            // this.props.navigation.dispatch(resetAction);
 
         } else if (deckObj.quizIndex === deckObj.questions.length-1) {
             // reset quiz info
@@ -46,14 +55,24 @@ export class Answer extends Component {
     markQuestionCorrect = () => {
         const {deckObj} = this.props.navigation.state.params;
         const {dispatch} = this.props;
-        dispatch(addQuizScore(deckObj.title, deckObj.quizScore+1));
-        this.updateIndexDispatchAndNavigate(dispatch, deckObj, deckObj.quizScore+1);
+        this.setState({background: green}, ()=>{
+            setTimeout(()=>{
+                dispatch(addQuizScore(deckObj.title, deckObj.quizScore+1));
+                this.updateIndexDispatchAndNavigate(dispatch, deckObj, deckObj.quizScore+1);
+            }, 400);
+
+        });
+
     };
 
     markQuestionIncorrect = () => {
         const {deckObj} = this.props.navigation.state.params;
         const {dispatch} = this.props;
-        this.updateIndexDispatchAndNavigate(dispatch, deckObj, deckObj.quizScore);
+        this.setState({background: red}, ()=>{
+            setTimeout(()=>{
+                this.updateIndexDispatchAndNavigate(dispatch, deckObj, deckObj.quizScore);
+            }, 400);
+        });
     };
 
     render(){
@@ -61,7 +80,7 @@ export class Answer extends Component {
         const questionObj = deckObj.questions[deckObj.quizIndex];
 
         return (
-            <View style={styles.container}>
+            <View style={[styles.container, {backgroundColor:this.state.background}]}>
                 <View style={styles.progress}>
                     <Text style={styles.progressText}>{`${deckObj.quizIndex+1}/${deckObj.questions.length}`}</Text>
                 </View>
@@ -96,7 +115,6 @@ export class Answer extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
         justifyContent: 'space-between',
         alignItems: 'center',
     },
@@ -114,7 +132,7 @@ const styles = StyleSheet.create({
     },
     answerText: {
         color: black,
-        fontSize: 20,
+        fontSize: 40,
         alignSelf: 'center',
         fontWeight: 'bold',
     },
@@ -123,8 +141,8 @@ const styles = StyleSheet.create({
         margin: 20,
     },
     questionButtonText:{
-        color: red,
-        fontSize: 12,
+        color: purple,
+        fontSize: 20,
     },
     buttons: {
         marginBottom:100,
@@ -134,7 +152,7 @@ const styles = StyleSheet.create({
     },
     correctButton: {
         padding: 10,
-        backgroundColor: green,
+        backgroundColor: black,
         borderRadius: 5,
         margin: 5,
         height: 50,
@@ -146,7 +164,7 @@ const styles = StyleSheet.create({
     },
     incorrectButton: {
         padding: 10,
-        backgroundColor: red,
+        backgroundColor: black,
         borderRadius: 5,
         margin: 5,
         height: 50,
