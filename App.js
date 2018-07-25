@@ -11,7 +11,7 @@ import DeckList from './components/DeckList';
 import Deck from './components/Deck';
 import NewCard from './components/NewCard';
 import NewDeck from './components/NewDeck';
-import { white, black } from "./utils/colors";
+import { white, black, orange, gray } from "./utils/colors";
 import Answer from "./components/Answer";
 import Question from "./components/Question";
 import Score from "./components/Score";
@@ -20,22 +20,32 @@ import {setLocalNotification} from "./utils/helpers";
 const transitionConfig = () => {
     return {
         transitionSpec: {
-            duration: 750,
+            duration: 400,
             easing: Easing.out(Easing.poly(4)),
             timing: Animated.timing,
             useNativeDriver: true,
         },
         screenInterpolator: sceneProps => {
             const { position, layout, scene, index, scenes } = sceneProps;
-            console.log("currenScene", scene);
+            console.log("currentScene", scene);
             console.log("toIndex", index);
             console.log("scenes", scenes);
 
+            const toIndex = index;
             const thisSceneIndex = scene.index;
             const height = layout.initHeight;
             const width = layout.initWidth;
 
-            const translateX = position.interpolate({
+            const sceneParams = scene.route.params || {};
+            console.log("params", sceneParams);
+
+
+            const translateXLeft = position.interpolate({
+                inputRange: [thisSceneIndex - 1, thisSceneIndex, thisSceneIndex + 1],
+                outputRange: [-width, 0, 0]
+            });
+
+            const translateXRight = position.interpolate({
                 inputRange: [thisSceneIndex - 1, thisSceneIndex, thisSceneIndex + 1],
                 outputRange: [width, 0, 0]
             });
@@ -45,13 +55,17 @@ const transitionConfig = () => {
                 outputRange: [height, 0]
             });
 
-            const slideFromRight = { transform: [{ translateX }] };
+            const slideFromRight = { transform: [{ translateX: translateXRight  }] };
+            const slideFromLeft = { transform: [{ translateX: translateXLeft }] };
+
             const slideFromBottom = { transform: [{ translateY }] };
 
-            // Do not transform the screen being navigated to
-            if (index < scene.index && index ===0) return slideFromBottom;
+            // Slide from right if we are going to answer
+            if (toIndex ===1) return slideFromRight;
+            // Slide from bottom only if we finished answering a question
+            if (toIndex === 0 && sceneParams.answered ) return slideFromBottom;
 
-            return slideFromRight
+            return slideFromLeft
         },
     }
 };
@@ -61,26 +75,22 @@ const Tabs = createBottomTabNavigator({
         screen: DeckList,
         navigationOptions: {
             tabBarLabel: 'DeckList',
-            tabBarIcon: ({ tintColor }) => <Ionicons name='ios-bookmarks' size={30} color={tintColor} />
+            tabBarIcon: ({ tintColor }) => <Ionicons name='ios-list-box' size={40} color={tintColor} />
         },
     },
-
     NewDeck: {
         screen: NewDeck,
         navigationOptions: {
             tabBarLabel: 'NewDeck',
-            tabBarIcon: ({ tintColor }) => <FontAwesome name='plus-square' size={30} color={tintColor} />        },
+            tabBarIcon: ({ tintColor }) => <FontAwesome name='plus-square' size={40} color={tintColor} />        },
     },
 
 }, {
-    navigationOptions: {
-        header: null
-    },
     tabBarOptions: {
         activeTintColor: black,
         style: {
-            height: 56,
-            backgroundColor: white,
+            height: 70,
+            backgroundColor: orange,
             shadowColor: 'rgba(0, 0, 0, 0.24)',
             shadowOffset: {
                 width: 0,
@@ -88,7 +98,11 @@ const Tabs = createBottomTabNavigator({
             },
             shadowRadius: 6,
             shadowOpacity: 1
-        }
+        },
+        labelStyle: {
+            fontSize: 15,
+            fontWeight: 'bold',
+        },
     }
 });
 
@@ -115,37 +129,32 @@ const Stack = createStackNavigator({
     Home: {
         screen: Tabs,
         navigationOptions: {
-            header: null
+            header: null,
         }
     },
     Deck: {
         screen: Deck,
-        navigationOptions: {
-            headerTintColor: white,
-            headerStyle: {
-                backgroundColor: black,
-            }
-        }
     },
     NewCard: {
       screen: NewCard,
-      navigationOptions: {
-          headerTintColor: white,
-          headerStyle: {
-              backgroundColor: black,
-          }
-      }
     },
     CardNav: {
         screen: CardNav,
         navigationOptions: {
             title: 'Quiz',
-            headerTintColor: white,
-            headerStyle: {
-                backgroundColor: black,
-            }
         }
     }
+}  ,{
+    navigationOptions: {
+        headerStyle: {
+            backgroundColor: orange,
+        },
+        headerTintColor: black,
+        headerTitleStyle: {
+            fontWeight: 'bold',
+        },
+    },
+    initialRouteName: 'Home',
 });
 
 export default class App extends React.Component {

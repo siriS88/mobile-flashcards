@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
 import {black, gray, white, green, red} from "../utils/colors";
 import { StackActions, NavigationActions } from 'react-navigation';
 
@@ -38,7 +38,8 @@ export class Score extends Component {
     render() {
         const { scoreObj, deckId } = this.props.navigation.state.params;
         return (
-            <View style={styles.container}>
+            <ImageBackground source={require("../assets/studyPattern.jpg")}
+                             style={styles.container}>
                 <View style={styles.header}>
                     <Text style={styles.deckTitleText}>
                         {`Deck: ${deckId}`}
@@ -68,7 +69,7 @@ export class Score extends Component {
                         <Text style={styles.backToDeckButtonText}>Back To Deck</Text>
                     </TouchableOpacity>
                 </View>
-            </View>
+            </ImageBackground>
         )
     }
 }
@@ -78,7 +79,9 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         justifyContent: 'space-between',
-        alignItems: 'center'
+        alignItems: 'center',
+        width: '100%',
+        height: '100%',
     },
     header:{
         marginTop: 100,

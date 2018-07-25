@@ -1,14 +1,21 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
 import { black, purple } from "../utils/colors";
 
 export class Question extends Component {
+    componentWillReceiveProps(props){
+        if (props.navigation.getParam('answered')) {
+            props.navigation.setParams({answered: false});
+        }
+    }
+
     render(){
         const {deckObj} = this.props;
         const questionObj = deckObj.questions[deckObj.quizIndex];
         return (
-            <View style={styles.container}>
+            <ImageBackground source={require("../assets/studyPattern.jpg")}
+                             style={styles.container}>
                 <View style={styles.progress}>
                     <Text style={styles.progressText}>{`${deckObj.quizIndex+1}/${deckObj.questions.length}`}</Text>
                 </View>
@@ -16,11 +23,11 @@ export class Question extends Component {
                     <Text style={styles.questionText}>{questionObj.question}</Text>
                     <TouchableOpacity style={styles.answerButton}
                         onPress={()=>this.props.navigation.navigate('Answer',
-                            {deckObj: deckObj})}>
+                            {deckObj: deckObj, answered:false})}>
                         <Text style={styles.answerButtonText}>Show answer</Text>
                     </TouchableOpacity>
                 </View>
-            </View>
+            </ImageBackground>
         )
     }
 }
@@ -36,9 +43,10 @@ function mapStateToProps(state, {navigation}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
         justifyContent: 'flex-start',
-        alignItems: 'center'
+        alignItems: 'center',
+        width: '100%',
+        height: '100%',
     },
     progress: {
         margin: 20,

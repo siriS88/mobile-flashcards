@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { green, red, white, black, purple } from "../utils/colors";
+import { View, Text, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
+import { green, red, white, black, purple, orange } from "../utils/colors";
 import { addQuizScore, addQuizIndex } from "../actions";
 import { StackActions, NavigationActions } from 'react-navigation';
 import { setLocalNotification, clearLocalNotification } from "../utils/helpers";
@@ -10,15 +10,14 @@ export class Answer extends Component {
     constructor(props){
         super(props);
         this.state={
-            background: white,
+            background: '',
         }
 
     }
     updateIndexDispatchAndNavigate = (dispatch, deckObj, newScore) => {
         if (deckObj.quizIndex < deckObj.questions.length-1) {
             dispatch(addQuizIndex(deckObj.title, deckObj.quizIndex+1));
-            this.props.navigation.navigate('CardNav', {deckId: deckObj.title},
-                NavigationActions.navigate({ routeName: 'Question' }));
+            this.props.navigation.navigate('Question', {deckId: deckObj.title, answered: true});
 
             // //RESET STACK NAVIGATOR and add next Question screen onto stack
             // const resetAction = StackActions.reset({
@@ -55,12 +54,12 @@ export class Answer extends Component {
     markQuestionCorrect = () => {
         const {deckObj} = this.props.navigation.state.params;
         const {dispatch} = this.props;
+        this.props.navigation.setParams({ answered: true });
         this.setState({background: green}, ()=>{
             setTimeout(()=>{
                 dispatch(addQuizScore(deckObj.title, deckObj.quizScore+1));
                 this.updateIndexDispatchAndNavigate(dispatch, deckObj, deckObj.quizScore+1);
-            }, 400);
-
+            }, 100);
         });
 
     };
@@ -68,10 +67,11 @@ export class Answer extends Component {
     markQuestionIncorrect = () => {
         const {deckObj} = this.props.navigation.state.params;
         const {dispatch} = this.props;
+        this.props.navigation.setParams({ answered: true });
         this.setState({background: red}, ()=>{
             setTimeout(()=>{
                 this.updateIndexDispatchAndNavigate(dispatch, deckObj, deckObj.quizScore);
-            }, 400);
+            }, 100);
         });
     };
 
@@ -80,7 +80,8 @@ export class Answer extends Component {
         const questionObj = deckObj.questions[deckObj.quizIndex];
 
         return (
-            <View style={[styles.container, {backgroundColor:this.state.background}]}>
+            <ImageBackground source={require("../assets/studyPattern.jpg")}
+                             style={[styles.container, {backgroundColor:this.state.background !=='' ? this.state.background : null}]}>
                 <View style={styles.progress}>
                     <Text style={styles.progressText}>{`${deckObj.quizIndex+1}/${deckObj.questions.length}`}</Text>
                 </View>
@@ -95,19 +96,19 @@ export class Answer extends Component {
                     <TouchableOpacity style={styles.correctButton}
                                       onPress={this.markQuestionCorrect}
                     >
-                        <Text style={styles.buttonText}>
+                        <Text style={styles.correctButtonText}>
                             Correct
                         </Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.incorrectButton}
                                       onPress={this.markQuestionIncorrect}
                     >
-                        <Text style={styles.buttonText}>
+                        <Text style={styles.incorrectButtonText}>
                             Incorrect
                         </Text>
                     </TouchableOpacity>
                 </View>
-            </View>
+            </ImageBackground>
         )
     }
 }
@@ -117,6 +118,8 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'space-between',
         alignItems: 'center',
+        width: '100%',
+        height: '100%',
     },
     progress: {
         margin: 20,
@@ -152,15 +155,22 @@ const styles = StyleSheet.create({
     },
     correctButton: {
         padding: 10,
-        backgroundColor: black,
+        backgroundColor: orange,
         borderRadius: 5,
         margin: 5,
         height: 50,
     },
-    buttonText :{
-        color: white,
+    correctButtonText :{
+        color: black,
         fontSize: 20,
         alignSelf: 'center',
+        fontWeight: 'bold',
+    },
+    incorrectButtonText :{
+        color: orange,
+        fontSize: 20,
+        alignSelf: 'center',
+        fontWeight: 'bold',
     },
     incorrectButton: {
         padding: 10,

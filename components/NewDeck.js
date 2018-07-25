@@ -1,16 +1,12 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import { View, Text, TouchableOpacity, StyleSheet, TextInput, Platform, KeyboardAvoidingView } from 'react-native';
-import { white, black } from "../utils/colors";
+import { View, Text, TouchableOpacity, StyleSheet, TextInput,
+    Platform, KeyboardAvoidingView, ImageBackground } from 'react-native';
+import { white, black, orange } from "../utils/colors";
 import {saveDeckTitle} from '../utils/api';
 import {addDeck} from '../actions';
 
 export class NewDeck extends Component {
-    static navigationOptions = () => {
-        return {
-            title: 'Add Deck',
-        }
-    };
 
     constructor(props){
         super(props);
@@ -35,23 +31,30 @@ export class NewDeck extends Component {
 
     render() {
         return(
-            <KeyboardAvoidingView style={styles.container} behavior="padding">
-                <View style={styles.form}>
-                    <TextInput
-                        style={styles.textInput}
-                        placeholder="Deck Title"
-                        onChangeText={(text) => this.setState({deckTitle: text})}
-                        value={this.state.deckTitle}
-                        keyboardType='default'
-                    />
-                    <TouchableOpacity
-                        style={Platform.OS === 'ios' ? styles.iosSubmitBtn : styles.AndroidSubmitBtn}
-                        onPress={this.submit}
-                    >
-                        <Text style={styles.submitBtnText}>Submit</Text>
-                    </TouchableOpacity>
-                </View>
-            </KeyboardAvoidingView>
+            <ImageBackground source={require("../assets/studyPattern.jpg")}
+                             style={styles.container}>
+                <KeyboardAvoidingView behavior="padding">
+                    <View style={styles.header}>
+                        <Text style={styles.headingText}>Add Deck</Text>
+                    </View>
+                    <View style={styles.form}>
+                        <TextInput
+                            style={styles.textInput}
+                            placeholder="Deck Title"
+                            onChangeText={(text) => this.setState({deckTitle: text})}
+                            value={this.state.deckTitle}
+                            keyboardType='default'
+                        />
+                        <TouchableOpacity
+                            style={Platform.OS === 'ios' ? styles.iosSubmitBtn : styles.AndroidSubmitBtn}
+                            onPress={this.submit}
+                        >
+                            <Text style={styles.submitBtnText}>Submit</Text>
+                        </TouchableOpacity>
+                    </View>
+                </KeyboardAvoidingView>
+            </ImageBackground>
+
         )
     }
 }
@@ -59,8 +62,22 @@ export class NewDeck extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
         alignItems: 'stretch',
+        width: '100%',
+        height: '100%',
+    },
+    header: {
+        borderBottomColor: orange,
+        borderBottomWidth: 4,
+        backgroundColor: orange,
+    },
+    headingText:{
+        fontSize: 40,
+        fontWeight: 'bold',
+        margin: 20,
+        alignSelf: 'center',
+        color: black,
+        paddingTop: 10,
     },
     form:{
         marginTop: 100,
@@ -99,9 +116,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     submitBtnText: {
-        color: white,
+        color: orange,
         fontSize: 22,
         textAlign: 'center',
+        fontWeight: 'bold',
     },
 });
 

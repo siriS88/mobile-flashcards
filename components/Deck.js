@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { gray, white, black } from "../utils/colors";
+import { View, Text, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
+import { gray, white, black, orange } from "../utils/colors";
 import { addQuizScore, addQuizIndex } from "../actions";
 
 export class Deck extends Component {
@@ -25,7 +25,8 @@ export class Deck extends Component {
     render() {
         const {deckObj} = this.props;
         return(
-            <View style={styles.container}>
+            <ImageBackground source={require("../assets/studyPattern.jpg")}
+                             style={styles.container}>
                 <View style={styles.header}>
                     <Text style={styles.heading}>{deckObj.title}</Text>
                     <Text style={styles.subHeading}>{`${deckObj.questions?deckObj.questions.length:0} cards`}</Text>
@@ -44,7 +45,7 @@ export class Deck extends Component {
                         <Text style={styles.quizButtonText}>Start Quiz</Text>
                     </TouchableOpacity>
                 </View>
-            </View>
+            </ImageBackground>
         )
     }
 }
@@ -59,11 +60,12 @@ function mapStateToProps(state, {navigation}){
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        width: '100%',
+        height: '100%',
     },
     header:{
-        marginTop: 200,
+        marginTop: 40,
         marginBottom:40,
         alignItems: 'center',
     },
@@ -91,23 +93,23 @@ const styles = StyleSheet.create({
         height: 50,
     },
     quizButtonText :{
-        color: white,
+        color: orange,
         fontSize: 20,
         alignSelf: 'center',
+        fontWeight: 'bold',
     },
     addButton: {
         padding: 10,
-        backgroundColor: white,
+        backgroundColor: orange,
         borderRadius: 5,
         margin: 5,
-        borderColor: black,
-        borderWidth: 1,
         height: 50,
     },
     addButtonText: {
         color: black,
         fontSize: 20,
         alignSelf: 'center',
+        fontWeight: 'bold',
     },
 });
 

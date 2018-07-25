@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import { View, Text, TouchableOpacity, StyleSheet, Platform, FlatList } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Platform, FlatList, ImageBackground } from 'react-native';
 import {getDecks} from '../utils/api';
 import {receiveDecks} from "../actions";
 import { white, gray, black, orange } from '../utils/colors';
@@ -39,7 +39,8 @@ export class DeckList extends Component {
     render() {
         const {decks} = this.props;
         return(
-            <View style={styles.container}>
+            <ImageBackground source={require("../assets/studyPattern.jpg")}
+                             style={styles.container}>
                 <View style={styles.header}>
                     <Text style={styles.headingText}>Decks</Text>
                 </View>
@@ -48,7 +49,7 @@ export class DeckList extends Component {
                     renderItem={this.renderItem}
                     keyExtractor={item => item.title}
                 />
-            </View>
+            </ImageBackground>
         )
     }
 }
@@ -62,9 +63,10 @@ function mapStateToProps(entries) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
         justifyContent: 'flex-start',
         alignItems: 'stretch',
+        width: '100%',
+        height: '100%',
     },
     header: {
         borderBottomColor: orange,
@@ -91,9 +93,10 @@ const styles = StyleSheet.create({
     headingText:{
         fontSize: 40,
         fontWeight: 'bold',
-        margin: 40,
+        margin: 20,
         alignSelf: 'center',
         color: black,
+        paddingTop: 10,
     },
     titleText:{
         fontSize: 30,
@@ -101,7 +104,7 @@ const styles = StyleSheet.create({
         color: orange,
     },
     subTitleText:{
-        fontSize: 15,
+        fontSize: 20,
         color: black,
     }
 });

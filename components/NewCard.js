@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import { View, Text, TouchableOpacity, StyleSheet, TextInput, Platform, KeyboardAvoidingView } from 'react-native';
-import { gray, white, black } from "../utils/colors";
+import { View, Text, TouchableOpacity, StyleSheet,
+    TextInput, Platform, KeyboardAvoidingView, ImageBackground } from 'react-native';
+import { gray, white, black, orange } from "../utils/colors";
 import {addCardToDeck} from '../utils/api';
 import {addCard} from '../actions';
 
@@ -39,30 +40,33 @@ export class NewCard extends Component {
 
     render() {
         return(
-            <KeyboardAvoidingView style={styles.container} behavior="padding">
-                <View style={styles.form}>
-                    <TextInput
-                        style={styles.textInput}
-                        placeholder="Type your question here"
-                        onChangeText={(text) => this.setState({question: text})}
-                        value={this.state.question}
-                        keyboardType='default'
-                    />
-                    <TextInput
-                        style={styles.textInput}
-                        placeholder="Type your answer here"
-                        onChangeText={(text) => this.setState({answer: text})}
-                        value={this.state.answer}
-                        keyboardType='default'
-                    />
-                    <TouchableOpacity
-                    style={Platform.OS === 'ios' ? styles.iosSubmitBtn : styles.AndroidSubmitBtn}
-                    onPress={this.submit}
-                    >
-                        <Text style={styles.submitBtnText}>Submit</Text>
-                    </TouchableOpacity>
-                </View>
-            </KeyboardAvoidingView>
+            <ImageBackground source={require("../assets/studyPattern.jpg")}
+                             style={styles.container}>
+                <KeyboardAvoidingView style={styles.container} behavior="padding">
+                    <View style={styles.form}>
+                        <TextInput
+                            style={styles.textInput}
+                            placeholder="Type your question here"
+                            onChangeText={(text) => this.setState({question: text})}
+                            value={this.state.question}
+                            keyboardType='default'
+                        />
+                        <TextInput
+                            style={styles.textInput}
+                            placeholder="Type your answer here"
+                            onChangeText={(text) => this.setState({answer: text})}
+                            value={this.state.answer}
+                            keyboardType='default'
+                        />
+                        <TouchableOpacity
+                        style={Platform.OS === 'ios' ? styles.iosSubmitBtn : styles.AndroidSubmitBtn}
+                        onPress={this.submit}
+                        >
+                            <Text style={styles.submitBtnText}>Submit</Text>
+                        </TouchableOpacity>
+                    </View>
+                </KeyboardAvoidingView>
+            </ImageBackground>
         )
     }
 }
@@ -70,8 +74,9 @@ export class NewCard extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
         alignItems: 'stretch',
+        width: '100%',
+        height: '100%',
     },
     form:{
       marginTop: 100,
@@ -110,9 +115,10 @@ const styles = StyleSheet.create({
       alignItems: 'center',
   },
   submitBtnText: {
-    color: white,
+    color: orange,
     fontSize: 22,
     textAlign: 'center',
+    fontWeight: 'bold',
 },
 });
 
