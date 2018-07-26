@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
     },
     answerText: {
         color: black,
-        fontSize: 40,
+        fontSize: 20,
         alignSelf: 'center',
         fontWeight: 'bold',
         backgroundColor: white,

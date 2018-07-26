@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     },
     questionText: {
         color: black,
-        fontSize: 40,
+        fontSize: 30,
         alignSelf: 'center',
         fontWeight: 'bold',
         backgroundColor: white,
