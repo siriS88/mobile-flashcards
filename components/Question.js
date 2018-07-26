@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import { View, Text, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
-import { black, purple } from "../utils/colors";
+import { black, purple, white, gray } from "../utils/colors";
 
 export class Question extends Component {
     componentWillReceiveProps(props){
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
     },
     question: {
-        margin: 40,
+        margin: 20,
         alignItems: 'center',
     },
     questionText: {
@@ -66,6 +66,11 @@ const styles = StyleSheet.create({
         fontSize: 40,
         alignSelf: 'center',
         fontWeight: 'bold',
+        backgroundColor: white,
+        borderColor: gray,
+        borderWidth: 1,
+        padding: 20,
+        borderRadius: 7,
     },
     answerButton: {
         alignItems: 'center',

@@ -8,7 +8,8 @@ export class Score extends Component {
     retakeQuiz = () => {
         const { deckId } = this.props.navigation.state.params;
 
-        // // navigate to CardNav
+        // Notes for future
+        // // navigate to CardNav - could also do this
         // this.props.navigation.navigate('CardNav', {deckId: deckId},
         //     NavigationActions.navigate({ routeName: 'Question' }));
 
@@ -23,7 +24,8 @@ export class Score extends Component {
         // });
         // this.props.navigation.dispatch(navigateAction);
 
-        //RESET STACK NAVIGATOR and add next Question screen onto stack
+        //RESET STACK NAVIGATOR and add next Question (first question of deck here )
+        // screen onto stack
         const resetAction = StackActions.reset({
             index: 0,
             actions: [NavigationActions.navigate({

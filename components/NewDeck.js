@@ -33,10 +33,10 @@ export class NewDeck extends Component {
         return(
             <ImageBackground source={require("../assets/studyPattern.jpg")}
                              style={styles.container}>
+                <View style={styles.header}>
+                    <Text style={styles.headingText}>Add Deck</Text>
+                </View>
                 <KeyboardAvoidingView behavior="padding">
-                    <View style={styles.header}>
-                        <Text style={styles.headingText}>Add Deck</Text>
-                    </View>
                     <View style={styles.form}>
                         <TextInput
                             style={styles.textInput}

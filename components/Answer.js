@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import { View, Text, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
-import { green, red, white, black, purple, orange } from "../utils/colors";
+import { green, red, white, black, purple, orange, gray } from "../utils/colors";
 import { addQuizScore, addQuizIndex } from "../actions";
 import { StackActions, NavigationActions } from 'react-navigation';
 import { setLocalNotification, clearLocalNotification } from "../utils/helpers";
@@ -10,7 +10,7 @@ export class Answer extends Component {
     constructor(props){
         super(props);
         this.state={
-            background: '',
+            background: null,
         }
 
     }
@@ -79,9 +79,8 @@ export class Answer extends Component {
         const {deckObj} = this.props.navigation.state.params;
         const questionObj = deckObj.questions[deckObj.quizIndex];
 
-        return (
-            <ImageBackground source={require("../assets/studyPattern.jpg")}
-                             style={[styles.container, {backgroundColor:this.state.background !=='' ? this.state.background : null}]}>
+        const content = (
+            <View>
                 <View style={styles.progress}>
                     <Text style={styles.progressText}>{`${deckObj.quizIndex+1}/${deckObj.questions.length}`}</Text>
                 </View>
@@ -108,7 +107,18 @@ export class Answer extends Component {
                         </Text>
                     </TouchableOpacity>
                 </View>
-            </ImageBackground>
+            </View>
+        );
+
+        return (
+                !this.state.background ?
+                <ImageBackground source={require("../assets/studyPattern.jpg")}
+                                 style={[styles.container]}>
+                    {content}
+                </ImageBackground> :
+                <View style={[styles.container, {backgroundColor:this.state.background}]}>
+                    {content}
+                </View>
         )
     }
 }
@@ -131,13 +141,18 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
     },
     answer:{
-        margin: 40,
+        margin: 20,
     },
     answerText: {
         color: black,
         fontSize: 40,
         alignSelf: 'center',
         fontWeight: 'bold',
+        backgroundColor: white,
+        borderColor: gray,
+        borderWidth: 1,
+        padding: 20,
+        borderRadius: 7,
     },
     questionButton:{
         alignItems: 'center',
