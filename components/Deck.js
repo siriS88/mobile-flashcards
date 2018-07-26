@@ -14,6 +14,7 @@ export class Deck extends Component {
 
     startQuiz = () => {
         const { deckObj, dispatch } = this.props;
+        if (deckObj.questions.length ===0) return;
         // reset any previously unfinished quiz info left behind
         dispatch(addQuizScore(deckObj.title, 0));
         dispatch(addQuizIndex(deckObj.title, 0));
