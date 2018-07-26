@@ -87,16 +87,3 @@ export function addCardToDeck(title, card) {
             console.error('Unable to add card to deck due to:', err)
         })
 }
-
-// export function addQuizInfoToDate(date, quizInfo) {
-//     return AsyncStorage.mergeItem(DECKS_QUIZ_DATES, JSON.stringify({
-//         date: quizInfo
-//     }))
-// }
-//
-// export function getQuizDateInfo() {
-//     return AsyncStorage.getItem(DECKS_QUIZ_DATES)
-//         .then((info)=>JSON.parse(info)).catch((err)=>{
-//         console.error('Unable to add card to deck due to:', err)
-//     })
-// }

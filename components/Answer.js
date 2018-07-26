@@ -3,7 +3,6 @@ import {connect} from 'react-redux';
 import { View, Text, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
 import { green, red, white, black, purple, orange, gray } from "../utils/colors";
 import { addQuizScore, addQuizIndex } from "../actions";
-import { StackActions, NavigationActions } from 'react-navigation';
 import { setLocalNotification, clearLocalNotification } from "../utils/helpers";
 
 export class Answer extends Component {
@@ -18,17 +17,6 @@ export class Answer extends Component {
         if (deckObj.quizIndex < deckObj.questions.length-1) {
             dispatch(addQuizIndex(deckObj.title, deckObj.quizIndex+1));
             this.props.navigation.navigate('Question', {deckId: deckObj.title, answered: true});
-
-            // //RESET STACK NAVIGATOR and add next Question screen onto stack
-            // const resetAction = StackActions.reset({
-            //     index: 0,
-            //     actions: [NavigationActions.navigate({
-            //         routeName: 'Question',
-            //         params: {deckId: deckObj.title},
-            //     })],
-            //     key:this.props.navigation.dangerouslyGetParent().state.key
-            // });
-            // this.props.navigation.dispatch(resetAction);
 
         } else if (deckObj.quizIndex === deckObj.questions.length-1) {
             // reset quiz info

@@ -18,6 +18,7 @@ import Score from "./components/Score";
 import {setLocalNotification} from "./utils/helpers";
 
 const transitionConfig = () => {
+    // this function is adapted from https://medium.com/async-la/custom-transitions-in-react-navigation-2f759408a053
     return {
         transitionSpec: {
             duration: 400,
