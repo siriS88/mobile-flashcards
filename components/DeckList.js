@@ -43,8 +43,8 @@ export class DeckList extends Component {
                           onPress={()=>this.props.navigation.navigate('Deck', {id: item.title})}
         >
             <View style={styles.row}>
-                <Text style={styles.titleText}>{item.title}</Text>
-                <View style={styles.row}>
+                <Text style={[styles.titleText, {width:'70%'}]}>{item.title}</Text>
+                <View style={{flexDirection: 'row', alignItems: 'center', width:'30%'}}>
                     <TouchableOpacity style={{margin:5}}
                                       onPress={()=>
                                           this.props.navigation.navigate('NewCard', {deckId: item.title}
@@ -60,7 +60,7 @@ export class DeckList extends Component {
                                       onPress={()=>{this.delete(item.title)}}>
                         <Ionicons name='md-trash' size={25} />
                     </TouchableOpacity>
-                    </View>
+                </View>
             </View>
             <Text style={styles.subTitleText}>{`${item.questions?item.questions.length:0} cards`}</Text>
         </TouchableOpacity>

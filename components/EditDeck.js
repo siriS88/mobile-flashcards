@@ -88,12 +88,13 @@ const styles = StyleSheet.create({
     row: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between'
+        width:'20%',
     },
     titleText:{
         fontSize: 20,
         fontWeight: 'bold',
         color: orange,
+        width:'80%',
     },
 });
 
