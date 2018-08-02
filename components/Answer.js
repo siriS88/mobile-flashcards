@@ -4,6 +4,7 @@ import { View, Text, TouchableOpacity, StyleSheet, ImageBackground } from 'react
 import { green, red, white, black, purple, orange, gray } from "../utils/colors";
 import { addQuizScore, addQuizIndex } from "../actions";
 import { setLocalNotification, clearLocalNotification } from "../utils/helpers";
+import { NavigationActions } from "react-navigation";
 
 export class Answer extends Component {
     constructor(props){
@@ -17,7 +18,12 @@ export class Answer extends Component {
         if (deckObj.quizIndex < deckObj.questions.length-1) {
             dispatch(addQuizIndex(deckObj.title, deckObj.quizIndex+1));
             this.props.navigation.navigate('Question', {deckId: deckObj.title, answered: true});
-
+            // this.props.navigation.dispatch(
+            //     NavigationActions.navigate({
+            //         routeName: "Question",
+            //         params: { deckId: deckObj.title, answered: true }
+            //     })
+            // );
         } else if (deckObj.quizIndex === deckObj.questions.length-1) {
             // reset quiz info
             dispatch(addQuizScore(deckObj.title, 0));

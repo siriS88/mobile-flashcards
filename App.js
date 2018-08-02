@@ -15,7 +15,10 @@ import { white, black, orange, gray } from "./utils/colors";
 import Answer from "./components/Answer";
 import Question from "./components/Question";
 import Score from "./components/Score";
+import EditDeck from "./components/EditDeck";
+import EditCard from "./components/EditCard";
 import {setLocalNotification} from "./utils/helpers";
+import { composeWithDevTools } from 'redux-devtools-extension';
 
 const transitionConfig = () => {
     // this function is adapted from https://medium.com/async-la/custom-transitions-in-react-navigation-2f759408a053
@@ -83,7 +86,8 @@ const Tabs = createBottomTabNavigator({
         screen: NewDeck,
         navigationOptions: {
             tabBarLabel: 'NewDeck',
-            tabBarIcon: ({ tintColor }) => <FontAwesome name='plus-square' size={40} color={tintColor} />        },
+            tabBarIcon: ({ tintColor }) => <FontAwesome name='plus-square' size={40} color={tintColor} />
+        },
     },
 
 }, {
@@ -136,8 +140,17 @@ const Stack = createStackNavigator({
     Deck: {
         screen: Deck,
     },
+    EditDeck: {
+        screen: EditDeck,
+        navigationOptions: {
+            title: 'Cards',
+        }
+    },
     NewCard: {
       screen: NewCard,
+    },
+    EditCard: {
+        screen: EditCard,
     },
     CardNav: {
         screen: CardNav,
@@ -159,7 +172,11 @@ const Stack = createStackNavigator({
 });
 
 export default class App extends React.Component {
-    store = createStore(reducer, applyMiddleware(logger));
+    // store = createStore(reducer, applyMiddleware(logger));
+    store = createStore(reducer, /* preloadedState, */ composeWithDevTools(
+        applyMiddleware(logger),
+        // other store enhancers if any
+    ));
 
     componentDidMount(){
         setLocalNotification();

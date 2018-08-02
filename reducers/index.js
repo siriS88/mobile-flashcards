@@ -1,4 +1,4 @@
-import {RECEIVE_DECKS, ADD_DECK, ADD_CARD, ADD_QUIZ_SCORE, ADD_QUIZ_INDEX } from '../actions';
+import {RECEIVE_DECKS, ADD_DECK, ADD_CARD, ADD_QUIZ_SCORE, ADD_QUIZ_INDEX, DELETE_DECK, DELETE_CARD, EDIT_CARD } from '../actions';
 
 export default function(state={}, action) {
     switch (action.type){
@@ -40,6 +40,30 @@ export default function(state={}, action) {
                 [action.title]: {
                     ...state[action.title],
                     quizIndex: action.index
+                }
+            };
+        case DELETE_DECK:
+            const decks = Object.assign({}, state);
+            delete decks[action.title];
+            return {
+                ...decks
+            };
+
+        case DELETE_CARD:
+            const allDecks = Object.assign({}, state);
+            const deck = allDecks[action.title];
+            deck.questions.splice(action.index, 1);
+            return {
+                ...allDecks
+            };
+        case EDIT_CARD:
+            const modQues = state[action.title].questions;
+            modQues[action.index] = action.card;
+            return {
+                ...state,
+                [action.title]: {
+                    ...state[action.title],
+                    questions: modQues,
                 }
             };
         default:

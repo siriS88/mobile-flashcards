@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import { View, Text, TouchableOpacity, StyleSheet, Platform, FlatList, ImageBackground } from 'react-native';
-import {getDecks} from '../utils/api';
-import {receiveDecks} from "../actions";
+import {getDecks, deleteDeck} from '../utils/api';
+import {receiveDecks, deleteADeck} from "../actions";
 import { white, gray, black, orange } from '../utils/colors';
-
+import { FontAwesome, Ionicons } from '@expo/vector-icons';
 
 export class DeckList extends Component {
     componentDidMount() {
@@ -27,11 +27,41 @@ export class DeckList extends Component {
         });
     }
 
+    delete = (title) => {
+        const {dispatch} = this.props;
+        deleteDeck(title).then(()=>{
+            dispatch(deleteADeck(title));
+        }).catch((err)=>console.warn(`Unable to delete deck ${title} due to ${err}`))
+    };
+
+    edit = (title) => {
+        this.props.navigation.navigate('EditDeck', {deckId:title});
+    };
+
     renderItem = ({item})=>(
         <TouchableOpacity style={styles.item}
                           onPress={()=>this.props.navigation.navigate('Deck', {id: item.title})}
         >
-            <Text style={styles.titleText}>{item.title}</Text>
+            <View style={styles.row}>
+                <Text style={styles.titleText}>{item.title}</Text>
+                <View style={styles.row}>
+                    <TouchableOpacity style={{margin:5}}
+                                      onPress={()=>
+                                          this.props.navigation.navigate('NewCard', {deckId: item.title}
+                                          )}
+                    >
+                        <Ionicons name='md-add' size={25} />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{margin:5}}
+                                      onPress={()=>{this.edit(item.title)}}>
+                        <FontAwesome name='edit' size={25} />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{margin:5}}
+                                      onPress={()=>{this.delete(item.title)}}>
+                        <Ionicons name='md-trash' size={25} />
+                    </TouchableOpacity>
+                    </View>
+            </View>
             <Text style={styles.subTitleText}>{`${item.questions?item.questions.length:0} cards`}</Text>
         </TouchableOpacity>
     );
@@ -81,7 +111,6 @@ const styles = StyleSheet.create({
         marginRight: 10,
         marginTop: 10,
         justifyContent: 'center',
-        alignItems: 'center',
         shadowRadius: 3,
         shadowOpacity: 0.8,
         shadowColor: 'rgba(0, 0, 0, 0.24)',
@@ -89,6 +118,11 @@ const styles = StyleSheet.create({
             width: 0,
             height: 3
         },
+    },
+    row: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between'
     },
     headingText:{
         fontSize: 40,

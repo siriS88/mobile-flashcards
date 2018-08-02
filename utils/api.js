@@ -87,3 +87,27 @@ export function addCardToDeck(title, card) {
             console.error('Unable to add card to deck due to:', err)
         })
 }
+
+export function deleteDeck(title) {
+    return getDecks().then((decks)=>{
+        let data = decks;
+        delete data[title];
+        AsyncStorage.setItem(DECKS_STORAGE_KEY, JSON.stringify(data));
+    })
+}
+
+export function deleteCardFromDeck(title, cardIdx) {
+    return getDecks().then((decks)=>{
+        let data = decks;
+        data[title].questions.splice(cardIdx, 1);
+        AsyncStorage.setItem(DECKS_STORAGE_KEY, JSON.stringify(data));
+    })
+}
+
+export function editCardInDeck(title, cardIdx, card) {
+    return getDecks().then((decks)=>{
+        let data = decks;
+        data[title].questions[cardIdx] = card;
+        AsyncStorage.setItem(DECKS_STORAGE_KEY, JSON.stringify(data));
+    })
+}
