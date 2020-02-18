@@ -1,3 +1,6 @@
+# Intro
+This project is developed as part of the Udacity React Nanodegree and uses code provided as part of this program.
+
 # App Overview
 This app allows users to create decks of flashcards and quiz themselves on a deck. 
 Once a quiz is taken, user is given  the score details. The app is built using 
